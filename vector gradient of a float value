@@ -1,0 +1,17 @@
+//calculate the vector gradient of a scalar value on a mesh
+float grad = @Cd.x;
+int j[] = neighbours(0,@ptnum);
+
+vector gradient = 0;
+
+foreach(int jp; j){
+    
+    vector op = normalize(@P - point(0,"P",jp));
+    vector cj = point(0,"Cd",jp);
+    float jgrad = cj.x;
+    
+    gradient += op * ((grad + jgrad)/2); 
+}
+gradient /= len(j);
+
+@v = normalize(gradient)*5;
