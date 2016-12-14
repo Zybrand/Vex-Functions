@@ -1,0 +1,58 @@
+// hexa grid built with cube cube coordinates 
+
+#include "math.h"
+//functions
+//this function draws each hexagon
+vector hex_corner(vector corner; float size; int shape){
+
+    float angle_deg = 0;
+    float angle_rad = 0;
+    vector center = set(-size/2.0,0,-sqrt(3)/2 * size);
+    int hex = addprim(geoself(), "poly");
+    
+    float rot = 0;
+    if(shape == 1)
+        rot = 30;
+
+    for(int i = 0; i < 6; i++){    
+        angle_deg = 60 * i + rot;
+        angle_rad = PI/180 * angle_deg;
+    
+        corner.x = corner.x + size * cos(angle_rad);
+        corner.z = corner.z + size * sin(angle_rad);
+        
+        int pt = addpoint(geoself(), corner + center);
+        addvertex(geoself(), hex, pt);
+    }
+    return 1;
+}
+//this function stores the cube coordinates
+vector hex(float q; float r; float s){
+        vector cube = set(q, r, s);
+        return cube;
+}
+//this function converts the cube coordinates to a flat plane
+vector hex_to_pixel(vector hex; float size; float q; float r){
+        float x = size * (3.0/2.0) * q;
+        float z = size * sqrt(3) * (r + (q/2));
+        return set(x, 0, z);
+}
+////////////////////////////////////////////////////
+float radius = 6;
+float scale = 5;
+float size = 0.27/radius * scale;
+vector pos = 0;
+
+//build loop to construct all the hexagons
+for(float q = -radius; q <= radius; q++){
+
+        float r1 = max(-radius, -q - radius);
+        float r2 = min(radius, -q + radius);
+    
+    for(float r = r1; r <= r2; r++){
+        
+        pos = hex(q, r, -q-r);
+        pos = hex_to_pixel(pos, size, q, r);
+        hex_corner(pos, size, 0);   
+    }
+}
